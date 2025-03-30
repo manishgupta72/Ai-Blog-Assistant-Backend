@@ -8,8 +8,10 @@ const {
   getUserBlogs,
   updateBlog,
   deleteBlog,
+  getAllBlogs,
 } = require("../controllers/blogController");
 
+router.get("/", getAllBlogs); // ✅ fetch all blogs
 router.post("/generate", auth, generateBlog);
 router.post("/", auth, createBlog);
 router.get("/:id", auth, getBlogById);
