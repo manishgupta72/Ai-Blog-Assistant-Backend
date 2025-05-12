@@ -1,13 +1,14 @@
-// backend/controllers/blogController.js (with CRUD)
+// backend/controllers/blogController.js (Updated for OpenRouter)
 const Blog = require("../models/blogModel");
-const { generateBlogFromTopic } = require("../services/openaiService");
+const openaiService = require("../services/openaiService");
+const imageService = require("../services/imageService");
 const validatePrompt = require("../utils/validatePrompt");
 
 exports.generateBlog = async (req, res) => {
   try {
-    console.log("Received Topic:", req.body.topic); // ✅ add this
+    console.log("Received Topic:", req.body.topic);
     validatePrompt(req.body.topic);
-    const content = await generateBlogFromTopic(req.body.topic);
+    const content = await openaiService.generateBlogFromTopic(req.body.topic);
     res.json({ content });
   } catch (err) {
     console.error("Generation Error:", err.message);
@@ -18,7 +19,6 @@ exports.generateBlog = async (req, res) => {
 exports.getAllBlogs = async (req, res) => {
   try {
     const blogs = await Blog.find().sort({ createdAt: -1 });
-    console.log("Fetched Blogs:", blogs); // ✅ add this
     res.json(blogs);
   } catch (err) {
     console.error("Error fetching blogs:", err);
@@ -74,5 +74,21 @@ exports.deleteBlog = async (req, res) => {
     res.json({ message: "Blog deleted" });
   } catch (err) {
     res.status(500).json({ error: "Failed to delete blog" });
+  }
+};
+
+// Reuse OpenRouter-powered utilities
+exports.suggestTitle = openaiService.suggestTitle;
+exports.suggestCaption = openaiService.suggestCaption;
+exports.rewriteParagraph = openaiService.rewriteParagraph;
+
+exports.generateBlogImage = async (req, res) => {
+  try {
+    const { prompt } = req.body;
+    const imageUrl = await imageService.generateImage(prompt);
+    res.json({ url: imageUrl });
+  } catch (err) {
+    console.error("Image Generation Error:", err);
+    res.status(500).json({ error: "Image generation failed" });
   }
 };
