@@ -62,7 +62,7 @@ exports.googleCallback = async (req, res) => {
     // 🔥 REDIRECT BACK TO FRONTEND WITH TOKENS
     // 👇 Add user.name to the redirect URL
     const redirectURL = `${
-      process.env.NEXT_PUBLIC_APP_URL
+      process.env.FRONTEND_URL
     }/login?accessToken=${accessToken}&refreshToken=${refreshToken}&userName=${encodeURIComponent(
       user.name
     )}`;
