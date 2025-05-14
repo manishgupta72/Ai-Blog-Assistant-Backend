@@ -4,7 +4,7 @@ const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const BASE_HEADERS = {
   "Content-Type": "application/json",
   Authorization: `Bearer ${OPENROUTER_API_KEY}`,
-  "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+  "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL,
   "X-Title": "AI Blog Assistant",
 };
 

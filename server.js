@@ -4,13 +4,21 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 dotenv.config();
+require("./config/passport");
+const passport = require("passport");
+const blogRoutes = require("./routes/blogRoutes");
+const authRoutes = require("./routes/authRoutes");
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(passport.initialize());
 
-const blogRoutes = require("./routes/blogRoutes");
 app.use("/api/blog", blogRoutes);
+app.use("/api/auth", authRoutes);
+
+app.get("/", (req, res) => res.send("Blog API Running"));
 
 mongoose
   .connect(process.env.MONGO_URI, {
