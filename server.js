@@ -1,31 +1,23 @@
-// backend/server.js
 const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const mongoose = require("mongoose");
-dotenv.config();
-require("./config/passport");
-const passport = require("passport");
+const app = express();
 const blogRoutes = require("./routes/blogRoutes");
 const authRoutes = require("./routes/authRoutes");
+const cors = require("cors");
 
-const app = express();
-
+// ✅ Essential for all frontend-backend CORS calls
 app.use(cors());
 app.use(express.json());
-app.use(passport.initialize());
 
-app.use("/api/blog", blogRoutes);
+// ✅ This makes `/blog/generate` etc. accessible
+app.use("/blog", blogRoutes);
 app.use("/api/auth", authRoutes);
 
-app.get("/", (req, res) => res.send("Blog API Running"));
+// ✅ Health check (test this from browser)
+app.get("/", (req, res) => {
+  res.send("API is working ✅");
+});
 
-mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
-
-app.listen(4000, () => console.log("Server running on port 4000"));
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
